@@ -1,60 +1,94 @@
 import '../css/normalize.css';
 import '../css/style.css';
 
-// eslint-disable-next-line no-console
-console.log('Hello world');
-
 /**
- *
- * Manipulating the DOM exercise.
- * Exercise programmatically builds navigation,
- * scrolls to anchors from navigation,
- * and highlights section in viewport upon scrolling.
  *
  * Dependencies: None
- *
  * JS Version: ES2015/ES6
- *
  * JS Standard: ESlint
  *
- */
-
-/**
- * Comments should be present at the beginning of each procedure and class.
- * Great to have comments before crucial code sections within the procedure.
- */
-
-/**
  * Define Global Variables
- *
  */
+
+const DEFAULT_DEBOUNCE_TIMEOUT = 200; // ms
+const menuElements = document.getElementById('navbar__list');
+const pageSections = Array.from(document.querySelectorAll('section[data-nav]'));
 
 /**
- * End Global Variables
- * Start Helper Functions
+ * Call func after the timer
  *
+ * @param {*} func
+ * @param {Number} timeout
+ * @returns
  */
+const debounce = (func, timeout = DEFAULT_DEBOUNCE_TIMEOUT) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, timeout);
+  };
+};
 
 /**
- * End Helper Functions
- * Begin Main Functions
+ * Generate menu item from existed section
+ * then add click event to navigate section with each menu item
  *
+ * @param {*} section
+ * @returns the Menu item Element
  */
+function createMenuItem(section) {
+  const menuItem = document.createElement('li');
+  menuItem.classList.add('menu__link');
+  menuItem.innerText =
+    section.getAttribute('data-nav') ?? `Section ${Math.random().toFixed(2)}`;
+  menuItem.id = section.getAttribute('data-nav-id');
 
-// build the nav
+  menuItem.addEventListener('click', () => {
+    document.getElementById(section.id).scrollIntoView({
+      behavior: 'smooth',
+    });
+  });
 
-// Add class 'active' to section when near top of viewport
+  return menuItem;
+}
 
-// Scroll to anchor ID using scrollTO event
+// End Helper Functions
+// Begin Main Functions
 
-/**
- * End Main Functions
- * Begin Events
- *
- */
+// Init create page menu items
+pageSections.forEach((section) => {
+  const menuItem = createMenuItem(section);
+  menuElements.appendChild(menuItem);
+});
 
-// Build menu
+window.addEventListener(
+  'scroll',
+  debounce(() => {
+    // Reset all current active section/nav state
+    pageSections.forEach((section) => {
+      section.classList.remove('section--active');
+      const navId = section.getAttribute('data-nav-id');
+      document.getElementById(navId)?.classList.remove('menu-item--active');
+    });
 
-// Scroll to section on link click
-
-// Set sections as active
+    // Find is active section then set active state
+    for (let i = 0; i < pageSections.length; i++) {
+      const section = pageSections[i];
+      const bounds = section.getBoundingClientRect();
+      if (!bounds || !window.innerHeight) {
+        return;
+      }
+      // Ignore the 10% bottom of the window
+      if (bounds.top > 0 && bounds.top < window.innerHeight * 0.9) {
+        section.classList.add('section--active');
+        const activeNavId = section.getAttribute('data-nav-id');
+        document
+          .getElementById(activeNavId)
+          ?.classList.add('menu-item--active');
+        break;
+      }
+    }
+  }),
+);

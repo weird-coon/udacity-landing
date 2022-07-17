@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "pretty": "yarn prettier --write .",
+    "lint": "eslint --ext .js --ignore-path .gitignore --fix src",
+    "format": "prettier .  --write",
     "prepare": "husky install"
   },
   "devDependencies": {

@@ -2,7 +2,10 @@
 import { defineConfig } from 'vite';
 import eslint from 'vite-plugin-eslint';
 
-export default defineConfig({
-  plugins: [eslint()],
+const eslintConfig = {
   fix: true,
+};
+
+export default defineConfig({
+  plugins: [eslint(eslintConfig)],
 });
