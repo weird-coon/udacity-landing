@@ -9,6 +9,7 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    'import/prefer-default-export': false,
+    'import/prefer-default-export': 0,
+    'no-plusplus': 0,
   },
 };
