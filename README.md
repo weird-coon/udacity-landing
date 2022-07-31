@@ -42,3 +42,5 @@ Make sure you have added a LICENSE file in your project folder. **Shortcut:** Cl
 I personally add the name of the license and provide a link to it like below. -->
 
 [GNU General Public License version 3](https://opensource.org/licenses/GPL-3.0)
+
+#GET_PASSES_THIS_REPO_UDACITY_PLEASE
